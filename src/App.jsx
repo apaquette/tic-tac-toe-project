@@ -74,14 +74,23 @@ function App() {
     setGameTurns([]);
   }
 
+  function handlePlayerNameChange(symbol, newName){
+    setPlayers(prevPlayers => {
+      return{
+        ...prevPlayers,
+        [symbol]: newName
+      };
+    });
+  }
 
   return <main>
     <div id="game-container">
     <ol id="players" className="highlight-player">
-      <Player name="Player 1" symbol="X" isActive={activePlayer === 'X'} />
-      <Player name="Player 2" symbol="O" isActive={activePlayer === 'O'} />
+      {Object.entries(players).map(([key, value]) => (
+        <Player name={value} symbol={key} isActive={activePlayer === key} onNameChange={handlePlayerNameChange} />
+      ))}
     </ol>
-    {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart} />}
+    {(winner || hasDraw) && <GameOver winner={players[winner]} onRestart={handleRestart} />}
     <GameBoard 
       onSelectSquare={handleSelectSquare} 
       board={gameBoard}
